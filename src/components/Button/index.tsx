@@ -1,14 +1,30 @@
-import React, { ButtonHTMLAttributes, PropsWithChildren } from 'react'
+import { ButtonHTMLAttributes, PropsWithChildren } from 'react'
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
   Partial<{
     className?: string
   }>
 
-const Button = ({ className, children, ...props }: PropsWithChildren<ButtonProps>) => {
+export const Button = ({
+  className,
+  children,
+  ...props
+}: PropsWithChildren<ButtonProps>) => {
+  return (
+    <button className={`p-2 ${className}`} {...props}>
+      {children}
+    </button>
+  )
+}
+
+export const FilledButton = ({
+  className,
+  children,
+  ...props
+}: PropsWithChildren<ButtonProps>) => {
   return (
     <button
-      className={`rounded-xl py-3 font-semibold text-xl px-5 ${className}`}
+      className={`bg-green-500 text-white rounded-xl py-3 font-semibold text-xl px-5 ${className}`}
       {...props}
     >
       {children}
@@ -16,4 +32,17 @@ const Button = ({ className, children, ...props }: PropsWithChildren<ButtonProps
   )
 }
 
-export default Button
+export const OutlineButton = ({
+  className,
+  children,
+  ...props
+}: PropsWithChildren<ButtonProps>) => {
+  return (
+    <button
+      className={`border border-green-500 text-green-500 rounded-xl py-3 font-semibold text-xl px-5 ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
+  )
+}

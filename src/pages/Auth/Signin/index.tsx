@@ -1,7 +1,8 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { Input } from '../../../components/Input'
-import Button from '../../../components/Button'
+import { FilledButton } from '../../../components/Button'
 import { Link } from 'react-router-dom'
+import Logo from '../../../components/Logo'
 
 const Signin = () => {
   const [forlgata, setForlgata] = useState({
@@ -20,8 +21,7 @@ const Signin = () => {
   return (
     <div className="w-dvw lg:h-dvh flex flex-col lg:flex-row gap-y-10">
       <div className="w-full lg:w-1/5 bg-gray-500 h-40 lg:h-full p-5 flex items-center lg:items-start justify-center lg:justify-start gap-2">
-        <h1 className="text-3xl text-white font-bold">AttendEase</h1>
-        <div className="p-5 rounded-full bg-white w-fit h-fit"></div>
+        <Logo />
       </div>
       <section className="w-full lg:w-4/5 h-[500px] lg:h-full">
         <form onSubmit={onSubmit} className="h-[95%] grid place-content-center gap-2">
@@ -50,7 +50,7 @@ const Signin = () => {
             className="lg:min-w-80"
           />
 
-          <Button className="bg-green-500 ml-auto text-white">Login</Button>
+          <FilledButton className="ml-auto">Login</FilledButton>
         </form>
 
         <div className="text-center flex flex-col">
