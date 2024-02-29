@@ -1,23 +1,37 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { Input } from '../../../components/Input'
-import { FilledButton } from '../../../components/Button'
+import { Button, FilledButton } from '../../../components/Button'
 import { Link } from 'react-router-dom'
 import Logo from '../../../components/Logo'
+import { login, requestOtp } from '@/request/auth'
+import { RotatingLines } from 'react-loader-spinner'
+import { Toaster } from 'react-hot-toast'
 
 const Signin = () => {
-  const [forlgata, setForlgata] = useState({
-    email: '',
-    password: '',
+  const [formData, setFormData] = useState({
+    phoneNum: '',
+    otp: '',
   })
-  const { email, password } = forlgata
+  const [loading, setLoading] = useState(false)
+  const [otpLoading, setOtpLoading] = useState(false)
+  const { otp, phoneNum } = formData
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setForlgata({ ...forlgata, [e.target.name]: e.target.value })
+    setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const requestOTP = () => {
+    requestOtp({ phoneNum, setLoading: setOtpLoading })
   }
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    await login({ loginData: formData, setLoading })
+  }
+
+  const validPhoneNum = phoneNum.length === 11
+
   return (
     <div className="w-dvw lg:h-dvh flex flex-col lg:flex-row gap-y-10">
       <div className="w-full lg:w-1/5 bg-gray-500 h-40 lg:h-full p-5 flex items-center lg:items-start justify-center lg:justify-start gap-2">
@@ -32,25 +46,44 @@ const Signin = () => {
 
           {/* email */}
           <Input
-            name="email"
-            type="email"
+            name="phoneNum"
+            type="number"
             onChange={onChange}
-            label="Email"
-            value={email}
+            label="Phone Number"
+            value={phoneNum}
             className="lg:min-w-80"
+            required
           />
 
           {/* password */}
-          <Input
-            name="password"
-            type="password"
-            onChange={onChange}
-            label="Password"
-            value={password}
-            className="lg:min-w-80"
-          />
+          <div className="flex items-end">
+            <Input
+              name="otp"
+              type="number"
+              onChange={onChange}
+              label="OTP"
+              value={otp}
+              className="lg:min-w-80"
+              required
+            />
+            <Button
+              disabled={!validPhoneNum}
+              onClick={requestOTP}
+              className="text-green-500"
+              type="button"
+            >
+              {otpLoading ? <RotatingLines width="30" /> : 'Request OTP'}
+            </Button>
+          </div>
 
-          <FilledButton className="ml-auto">Login</FilledButton>
+          <FilledButton
+            className="ml-auto"
+            loading={loading}
+            type="submit"
+            disabled={loading}
+          >
+            Login
+          </FilledButton>
         </form>
 
         <div className="text-center flex flex-col">
@@ -64,6 +97,8 @@ const Signin = () => {
           <small>Reset password</small>
         </div>
       </section>
+
+      <Toaster />
     </div>
   )
 }

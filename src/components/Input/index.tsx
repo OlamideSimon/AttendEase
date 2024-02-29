@@ -5,9 +5,10 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> &
   Partial<{
     value: string
     onChange: (event: ChangeEvent<HTMLInputElement>) => void
-    label?: string
-    className?: string
-    labelClassName?: string
+    label: string
+    className: string
+    labelClassName: string
+    name: string
   }>
 
 export const Input = ({
@@ -17,6 +18,7 @@ export const Input = ({
   className,
   labelClassName,
   type,
+  name,
   ...props
 }: InputProps) => {
   const [inputType, setInputType] = useState(type)
@@ -26,15 +28,18 @@ export const Input = ({
   }
   return (
     <div className="flex flex-col gap-1">
-      <label className={`text-slate-600 ${labelClassName}`}>{label}</label>
+      <label htmlFor={name} className={`text-slate-600 ${labelClassName}`}>
+        {label}
+      </label>
       <div className="relative">
         <input
-          className={`bg-slate-200 border rounded-lg text-xl p-2 w-full border-slate-400 ${className} ${
+          className={`bg-slate-200 border rounded-lg text-lg p-2 w-full border-slate-400 ${className} ${
             type === 'password' && 'pr-8'
           }`}
           onChange={onChange}
           value={value}
           type={inputType}
+          name={name}
           {...props}
         />
         {type === 'password' && (

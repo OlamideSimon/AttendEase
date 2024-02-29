@@ -20,12 +20,12 @@ const links = [
     path: '/dashboard',
   },
   {
-    name: 'Manage Attendance',
-    path: '',
+    name: 'Manage Classes',
+    path: '/dashboard/classes',
   },
   {
-    name: 'Student List',
-    path: '',
+    name: 'Manage Courses',
+    path: '/dashboard/courses',
   },
   {
     name: 'Reports',

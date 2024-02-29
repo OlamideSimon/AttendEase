@@ -1,46 +1,33 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeEvent, FormEvent, useState } from 'react'
-import { FilledButton, OutlineButton } from '../../../components/Button'
-import { Link } from 'react-router-dom'
-import Personal from './steps/personal'
-import LoginInfo from './steps/login_info'
+import { FilledButton } from '../../../components/Button'
+import { Link, useNavigate } from 'react-router-dom'
 import Logo from '../../../components/Logo'
+import { Input } from '@/components/Input'
+import { signup } from '@/request/auth'
+import { Toaster } from 'react-hot-toast'
 
 const Signup = () => {
-  const [step, setStep] = useState<number>(1)
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     name: '',
-    university: '',
-    course: '',
-    email: '',
-    password: '',
+    universityName: '',
+    phoneNum: '',
   })
+  const [loading, setLoading] = useState(false)
+
+  const { name, universityName, phoneNum } = formData
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (step < 2) return
+    const data = await signup({ signupData: formData, setLoading })
 
-    console.log(step)
-    console.log(formData)
-  }
-
-  const formSteps: { [key: number]: JSX.Element } = {
-    1: <Personal formData={formData} onChange={onChange} />,
-    2: <LoginInfo formData={formData} onChange={onChange} />,
-  }
-
-  const onClickNext = () => {
-    if (step < 2) {
-      setStep((prevStep) => prevStep + 1)
+    if (data) {
+      navigate('/dashboard')
     }
-  }
-
-  const onClickPrev = () => {
-    setStep((prevStep) => (prevStep > 1 ? prevStep - 1 : 1))
   }
 
   return (
@@ -55,20 +42,40 @@ const Signup = () => {
             <small>Gain access to our services by creating an account</small>
           </div>
 
-          {formSteps[step]}
+          <div className="grid gap-y-3">
+            <Input
+              name="name"
+              type="text"
+              onChange={onChange}
+              label="Name"
+              value={name}
+              required
+            />
 
-          {step >= 1 && step < 3 && (
-            <div className="flex">
-              {step > 1 && (
-                <OutlineButton type="button" onClick={onClickPrev}>
-                  Previous
-                </OutlineButton>
-              )}
-              <FilledButton onClick={onClickNext} type="submit" className="ml-auto">
-                Next
-              </FilledButton>
-            </div>
-          )}
+            <Input
+              name="universityName"
+              type="text"
+              onChange={onChange}
+              label="University Name"
+              value={universityName}
+              required
+            />
+
+            <Input
+              name="phoneNum"
+              type="number"
+              onChange={onChange}
+              label="Phone Number"
+              value={phoneNum}
+              required
+            />
+          </div>
+
+          <div className="flex ml-auto">
+            <FilledButton loading={loading} type="submit" disabled={loading}>
+              Submit
+            </FilledButton>
+          </div>
         </form>
 
         <div className="text-center flex flex-col">
@@ -80,6 +87,8 @@ const Signup = () => {
           </small>
         </div>
       </section>
+
+      <Toaster />
     </div>
   )
 }
